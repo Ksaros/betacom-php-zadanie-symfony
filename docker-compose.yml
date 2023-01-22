@@ -22,6 +22,7 @@ services:
         restart: unless-stopped
         environment:
             APP_ENV: "dev"
+            DATABASE_URL: "mysql://badanie_user:badanie_password@mysql:3306/badanie_db?serverVersion=5.7"
         volumes:
             - ./symfony/:/var/www/symfony/
         networks:
