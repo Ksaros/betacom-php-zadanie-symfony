@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: build/nginx/Dockerfile
+        restart: unless-stopped
+        depends_on:
+            - "php"
+        volumes:
+            - ./symfony/:/var/www/symfony/
+        ports:
+            - 8081:80
+        networks:
+            - badanie
+
+    php:
+        build:
+            context: .
+            dockerfile: build/php/Dockerfile
+        restart: unless-stopped
+        environment:
+            APP_ENV: "dev"
+        volumes:
+            - ./symfony/:/var/www/symfony/
+        networks:
+            - badanie
+
+    mysql:
+        image: mysql
+        restart: unless-stopped
+        command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--default-authentication-plugin=mysql_native_password']
+        environment:
+            MYSQL_DATABASE: "badanie_db"
+            MYSQL_USER: "badanie_user"
+            MYSQL_PASSWORD: "badanie_password"
+            MYSQL_ROOT_PASSWORD: "secret"
+        ports:
+            - 3306:3306
+        volumes:
+            - badanie_mysql:/var/lib/mysql
+        networks:
+            - badanie
+
+networks:
+    badanie:
+
+volumes:
+    badanie_mysql:
+
