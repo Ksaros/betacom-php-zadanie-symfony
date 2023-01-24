@@ -7,8 +7,17 @@
 {% block body %}
 	<div class="example-wrapper">
 		<h1>Lista Badań</h1>
+
+		{% if errors is defined %}
+			<ul class="errors">
+				{% for error in errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
 		<button onclick="toggleFormVisibility('addExam')">Dodaj badanie</button>
-        	<a href="{{ url("param_index") }}">Lista parametrów</a>
+		<a href="{{ url("param_index") }}">Lista parametrów</a>
 		<form method="post" action="{{ url("exam_create") }}" id="addExam" class="hidden" accept-charset="UTF-8">
 			<div>
 				<label for="name">Nazwa:</label>
@@ -18,14 +27,6 @@
 				<label for="description">Opis:</label>
 				<textarea id="description" type="text" name="description"></textarea>
 			</div>
-
-			{% if errors is defined %}
-				<ul class="errors">
-					{% for error in errors %}
-						<li>{{ error }}</li>
-					{% endfor %}
-				</ul>
-			{% endif %}
 
 			<input type="submit" value="Dodaj"/>
 		</form>
@@ -45,7 +46,9 @@
 						<td>{{ exam.name }}</td>
 						<td>{{ exam.description }}</td>
 						<td>{{ exam.createDt|date("Y-m-d") }}</td>
-						<td><a href="{{ url("exam_parameters", {id: exam.id}) }}">Do podglądu parametrów</a></td>
+						<td>
+							<a href="{{ url("exam_parameters", {id: exam.id}) }}">Do podglądu parametrów</a>
+						</td>
 					</tr>
 				{% endfor %}
 			</tbody>
