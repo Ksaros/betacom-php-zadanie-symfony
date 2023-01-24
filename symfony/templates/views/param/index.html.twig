@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Lista Parametrów!
+{% endblock %}
+
+{% block body %}
+	<div class="example-wrapper">
+		<h1>Lista Parametrów</h1>
+		<button onclick="toggleFormVisibility('addExam')">Dodaj parametr</button>
+        	<a href="{{ url("exam_index") }}">Lista badań</a>
+		<form method="post" action="{{ url("param_create") }}" id="addExam" class="hidden" accept-charset="UTF-8">
+			<div>
+				<label for="name">Nazwa: </label>
+				<input id="name" type="text" name="name" value="" required>
+			</div>
+			<div>
+				<label for="value">Wartość: </label>
+				<input id="value" type="number" step="0.01" name="value" value="" required>
+			</div>
+			<div>
+				<label for="exam">Badanie: </label>
+				<select id="exam" type="number" name="exam" value="" required>
+					{% for exam in exams %}
+						<option value="{{ exam.id }}">{{ exam.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			{% if errors is defined %}
+				<ul class="errors">
+					{% for error in errors %}
+						<li>{{ error }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+
+			<input type="submit" value="Dodaj"/>
+		</form>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Nazwa</th>
+					<th>Wartość</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for param in params %}
+					<tr>
+						<td>{{ param.name }}</td>
+						<td>{{ param.value }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
