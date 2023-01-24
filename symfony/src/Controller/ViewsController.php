@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Exam;
 use App\Repository\ExamRepository;
 use App\Repository\ParamRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,20 +29,27 @@ class ViewsController extends AbstractController
      */
     public function exam(int $id, ParamRepository $paramRepository, ExamRepository $examRepository): Response
     {
+        $exam = $examRepository->find($id);
+        if (!$exam instanceof Exam) {
+            return $this->redirectToRoute('exam_index', ['errors' => ['Brak wskazanego badania w bazie.']]);
+        }
+
         return $this->render('views/param/exam_params.html.twig', [
             'params' => $paramRepository->findBy(['exam' => $id]),
-            'exam' => $examRepository->find($id)
+            'exam' => $exam
         ]);
     }
 
     /**
      * @Route("/param", name="param_index")
      */
-    public function param(ParamRepository $paramRepository, ExamRepository $examRepository): Response
+    public function param(Request $request, ParamRepository $paramRepository, ExamRepository $examRepository): Response
     {
+        $errors = $request->query->get('errors');
         return $this->render('views/param/index.html.twig', [
             'params' => $paramRepository->findAll(),
-            'exams' => $examRepository->findAll()
+            'exams' => $examRepository->findAll(),
+            'errors' => $errors
         ]);
     }
 }

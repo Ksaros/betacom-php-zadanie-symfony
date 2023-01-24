@@ -7,8 +7,17 @@
 {% block body %}
 	<div class="example-wrapper">
 		<h1>Lista Parametrów</h1>
+
+		{% if errors is defined %}
+			<ul class="errors">
+				{% for error in errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
 		<button onclick="toggleFormVisibility('addExam')">Dodaj parametr</button>
-        	<a href="{{ url("exam_index") }}">Lista badań</a>
+		<a href="{{ url("exam_index") }}">Lista badań</a>
 		<form method="post" action="{{ url("param_create") }}" id="addExam" class="hidden" accept-charset="UTF-8">
 			<div>
 				<label for="name">Nazwa: </label>
@@ -26,14 +35,6 @@
 					{% endfor %}
 				</select>
 			</div>
-
-			{% if errors is defined %}
-				<ul class="errors">
-					{% for error in errors %}
-						<li>{{ error }}</li>
-					{% endfor %}
-				</ul>
-			{% endif %}
 
 			<input type="submit" value="Dodaj"/>
 		</form>
